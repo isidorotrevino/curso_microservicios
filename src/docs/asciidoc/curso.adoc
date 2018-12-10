@@ -1,0 +1,49 @@
+= Curso Introducción a SpringBoot
+IES Systems <isidoro.trevino@ies-systems.com>
+2018-12-10
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+
+== Introducción
+
+* Breve introducción
+** James Gosling
+** Uso en la empresa
+** Oracle
+
+== Descarga del SDK
+
+* SDKMAN
+** https://sdkman.io/install
+
+== Conceptos básicos
+
+* Packages
+* Clase y primitivos
+** Constructores
+** Métodos
+** Atributos
+** Getters y Setters
+* Compilación
+* Ciclos y condicionales
+
+== Conceptos básicos
+
+* Herencia y Polimorfismo
+** Interfaces
+** Method overload (Sobrecarga de operadores)
+** Method override
+* Colecciones
+** Maps, Lists y Sets
+** Iterator
+** Collection Streams
+
+== Conceptos Básicos
+
+* IO Streams
+* IO Readers
+* Classpath
+* Dependencias
+

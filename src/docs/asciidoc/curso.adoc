@@ -22,6 +22,7 @@ ifndef::sourcedir[:sourcedir: ../java]
 
 * Packages
 * Clase y primitivos
+** Operaciones con Strings
 ** Constructores
 ** Métodos
 ** Atributos
@@ -46,4 +47,13 @@ ifndef::sourcedir[:sourcedir: ../java]
 * IO Readers
 * Classpath
 * Dependencias
+
+== Conceptos intermedios
+
+* Reflection
+
+== Práctica
+
+* Crear una clase que lea un archivo de texto, separado por comas, mediante expresiones regulares
+extraiga los países con longitud menor a 6 caracteres y los guarde en otro archivo de texto
 

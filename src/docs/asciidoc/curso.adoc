@@ -1,10 +1,15 @@
-= Curso Introducción a SpringBoot
+= Curso de Desarrollo dej Microservicios
 IES Systems <isidoro.trevino@ies-systems.com>
 2018-12-10
 :revnumber: {project-version}
 :example-caption!:
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
+
+== Temario
+
+* Fundamentos de programación de lenguaje Java
+* 
 
 == Introducción
 
@@ -50,7 +55,10 @@ ifndef::sourcedir[:sourcedir: ../java]
 
 == Conceptos intermedios
 
+* Excepciones y StackTraces
 * Reflection
+* Propiedades y variables de ambiente
+
 
 == Práctica
 

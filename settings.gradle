@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'curso_springboot'
+rootProject.name = 'curso_microservicios'

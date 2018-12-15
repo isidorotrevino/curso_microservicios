@@ -1,4 +1,4 @@
-= Curso de Desarrollo dej Microservicios
+= Curso de Desarrollo de Microservicios
 IES Systems <isidoro.trevino@ies-systems.com>
 2018-12-10
 :revnumber: {project-version}
@@ -8,32 +8,219 @@ ifndef::sourcedir[:sourcedir: ../java]
 
 == Temario
 
+* Introducción y preámbulo
 * Fundamentos de programación de lenguaje Java
-* 
-
+* Gestión de proyectos java
+* Introducción a Micronaut
+* Temas avanzados de microservicios
+  
 == Introducción
 
-* Breve introducción
-** James Gosling
-** Uso en la empresa
-** Oracle
+=== Historia
 
-== Descarga del SDK
+* Ideado en Sun Microsystems en 1991 (1.0 en 1996)
+* Originalmente llamado Oak
+* "Write Once, Run Anywhere"
+* 1998/99 -> J2SE (Java Standard Edition)
+* 2006/07 -> Liberación de la JVM como código abierto (OpenJDK)
+* 2009/10 -> Oracle adquiere Sun Microsystems
+
+=== Introducción 
+
+* Java Virtual Machine (JVM)
+** Máquina (entorno de ejecución) que permite la ejecución de bytecode de Java
+** Entorno de ejecución semi-interpretado
+** Contiene:
+*** Classloader
+*** Garbage Collector (GC)
+*** Runtime Environment (JRE)
+
+=== Introducción
+
+* Java Community Process (JCP)
+** Establecido en 1998
+** Empresas e individuos que aportan solicitudes para controlar la evolución
+del programa
+* Java Specification Requests (JSR) 
+** Documentos que especifican nueva funcionalidad
+** Votados por el comité ejecutivo del JCP
+** Validado por el TCK (Technology Compatibility Kit)
+
+=== Introducción
+
+* Java Enterprise Edition (JEE)
+** Especificaciones complementarias a Java Standard Edition (JSE)
+** Definida por JSR
+** Orientada a satisfacer problemas "empresariales"
+*** Web Services
+*** Cómputo distribuido
+*** Aplicaciones Batch
+** Generalmente a través de un "Application Server"
+
+=== Introducción
+
+* Application Server
+** Servidor diseñado para instalar, operar y administrar aplicaciones
+con requerimientos empresariales
+*** Contenedor de artefactos web (Java Servlet Specification)
+*** Servicio de mensajes asíncronos (Java Message Service - JMS)
+*** Servicios para clusterización y transaccionalidad (Enterprise Javabeans - EJB)
+*** Infraestructura para servicios Web (JAX-WS)
+
+== Licenciamiento
+
+=== Versión 8 y anteriores
+
+* Disponible de manera pública y gratuita
+* Actualizaciones hasta 2020
+
+=== Versión 9 y posteriores
+
+* Versiones no LTS - Long Term Support, no serán disponibles después del 
+término de su vigencia (9 y 10)
+* Versión 11 será LTS pero no estará disponible de manera gratuita
+* Pago de licenciamiento
+
+=== Alternativas
+
+* OpenJDK (https://openjdk.java.net/)
+* Zulu (Azul Systems - https://www.azul.com/downloads/zulu/)
+* Amazon Corretto (https://aws.amazon.com/corretto/)
+
+== Fundamentos
+
+=== Descarga del SDK
 
 * SDKMAN
+** Herramienta de administración de diversos kits de desarrollo
 ** https://sdkman.io/install
+
+[source,text]
+.Instrucciones de instalación
+----
+$ curl -s "https://get.sdkman.io" | bash
+$ source "$HOME/.sdkman/bin/sdkman-init.sh"
+----
+
+=== Conceptos básicos
+
+* **Bytecode**
+** Set de instrucciones intermedio que permite agilizar su ejecución mediante
+un intérprete (JVM)
+* **Clase (Class)**
+** Plantilla que describe el estado/comportamiento de un objeto
+* **Objeto (Object)**
+** Instancia de una clase, implementando el estado/comportamiento descrito
+en la clase
+* **Primitivo**
+** Variables simples que solo almacenan un valor
+
+=== Conceptos básicos
+
+* **Java archive (JAR)**
+** Archivo Zip que contiene una colección de clases
+* **Web archive (WAR)**
+** Archivo que contiene artefactos web (HTML,CSS,JS,etc), así como clases java y archivos JAR
+para la ejecución de servicios basados en web
+* **Enterprise Archive (EAR)**
+** Archivo que contiene diversos Wars y Jars para la ejecución de sistemas complejos
+
+=== Principales comandos
+
+* **javac** Compilación de código fuente a bytecode (*.java -> *.class)
+* **java** Ejecución de código bytecode
+* **jar** Permite la creación de jars
+* **javadoc** Genera documentación a partir de anotaciones en el código fuente
+* **keytool** Administración/generación de llaves criptográficas
 
 == Conceptos básicos
 
-* Packages
-* Clase y primitivos
-** Operaciones con Strings
-** Constructores
-** Métodos
-** Atributos
-** Getters y Setters
-* Compilación
-* Ciclos y condicionales
+=== Elementos básicos
+
+==== Packages
+
+* Corresponden a folders físicos
+* Permiten segmentar y clasificar las diferentes clases (namespace)
+
+==== Clase
+
+* Deben estar declarados en archivos con terminación .java
+* Solo una clase pública por archivo
+* Se declara como **<modificador> class [extends <superclase>] [implements <interface>]**
+
+=== Elementos básicos
+
+[source,java]
+.Ejemplo de clase java
+----
+package com.ies.demo
+
+public class MiClase extends ArrayList implements Map{
+	//Implementación
+}
+----
+
+=== Elementos básicos
+
+==== Atributos
+
+* Variables contenidas dentro de una clase
+* Definida como **[<modificador>] [<static>] [<final>] <tipo> <nombre> = [<valor inicial>]**
+
+[source,java]
+----
+public class MiClase extends ArrayList implements Map{
+	public int contador = 0;
+	public static String comando;
+	List listado;
+	final Map mapa = new HashMap();
+}
+----
+
+=== Elementos básicos
+
+==== Métodos
+
+* Colección de instrucciones agrupadas para desempeñar una operación
+* Definida como **[<modificador>] <tipo de retorno> <nombre>([<parametro 1>[,<parametro2>[,<parametron>...]]]){ <cuerpo> }**
+
+[source,java]
+----
+public class MiClase extends ArrayList implements Map{
+	public String obtenerNombre(String parametro){
+		//Cuerpo
+	}
+}
+----
+
+=== Elementos básicos
+
+==== Constructor
+
+* Permite agregar comportamiento al momento de instanciar una clase en memoria
+* Si no se define un constructor, el compilador genera uno por default
+* Definida como **[<modificador>] <nombre de la clase>([<parametro 1>[,<parametro2>[,<parametron>...]]]){ <cuerpo> }**
+
+[source,java]
+----
+public class MiClase extends ArrayList implements Map{
+	String nombre;
+
+	public MiClase(String parametro){
+		nombre=parametro;
+	}
+}
+----
+
+=== Elementos básicos
+
+==== DEMO
+
+== Paradigma Orientado a Objetos
+
+=== Herencia
+
+
 
 == Conceptos básicos
 

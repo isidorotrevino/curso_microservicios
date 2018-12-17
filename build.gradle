@@ -82,7 +82,7 @@ asciidoctor {
         'idprefix': 'slide-',
         'idseparator': '-',
         'docinfo1': '',
-        'revealjs_theme': 'black',
+        'revealjs_theme': 'white',
         'revealjs_transition': 'linear',
         'revealjs_history': 'true',
         'revealjs_slideNumber': 'true'

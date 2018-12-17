@@ -7,12 +7,31 @@ ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../java]
 
 == Temario
-
+ 
 * Introducción y preámbulo
 * Fundamentos de programación de lenguaje Java
 * Gestión de proyectos java
 * Introducción a Micronaut
 * Temas avanzados de microservicios
+
+=== Descarga de código fuente
+
+https://github.com/isidorotrevino/curso_microservicios
+
+[source,text]
+----
+git clone https://github.com/isidorotrevino/curso_microservicios
+----
+
+=== Otros documentos de interés
+
+* Documentación Java API
+** https://docs.oracle.com/javase/8/docs/api/
+* Documentación Micronaut
+** https://docs.micronaut.io/latest/guide/index.html
+** https://docs.micronaut.io/latest/api/
+* Documentación Docker
+** https://docs.docker.com/
   
 == Introducción
 
@@ -220,35 +239,255 @@ public class MiClase extends ArrayList implements Map{
 
 === Herencia
 
+* Consiste en el proceso mediante el cual una clase puede adquirir
+los atributos y métodos de otra.
+* Una clase solo puede heredar de una sola clase, mediante el modificador **extends**
 
+[source,java]
+----
+public class Carro{
+  public void sonarClaxon(){
+  	System.out.println("Honk!");
+  }
+}
+public class Audi extends Carro{
+}
+public class Prueba{
+	public void probarCarro(){
+		Audi audi = new Audi();
+		audi.sonarClaxon();
+	}
+}
+----
 
-== Conceptos básicos
+=== Polimorfismo
 
-* Herencia y Polimorfismo
+* Es la capacidad de un objeto de tomar muchas formas
+
+[source,java]
+----
+public class Animal { }
+public class Mamifero extends Animal{ }
+public class Venado extends Mamifero{ }
+public class Prueba {
+	public void probarPolimorfismo(){
+		Venado v = new Venado();
+		Mamifero m = v;
+		Animal a = m;
+		Object o = a;
+	}
+}
+----
+
+=== Interface
+
+* Sirve de apoyo al polimorfismo para definir comortamientos comúnes, define métodos sin considerar su implementación
+* Opcionalmente puede definir métodos por defecto, métodos estáticos,
+constantes y clases anidadas
+
+[source,java]
+----
+public interface ComportamientoAnimal{
+	public void desplazarse();
+	public String hacerRuido();
+}
+public class Cerdo extends Animal implements ComportamientoAnimal{
+	public void desplazarse(){
+		System.out.println("Camina lento");
+	}
+	public String hacerRudio(){
+		return "Oink";
+	}
+}
+----
+
+=== Method override
+
+* Permite a una clase sobreescribir el comportamiento de un método/constructor heredado
+
+[source,java]
+----
+public class CerditoVietnamita extends Cerdo{
+	public String hacerRuido(){
+		return "cuiiii";
+	}
+	public void desplazarse(){
+		//Podemos invocar el método de la superclase
+		super.desplazarse() 
+		System.out.println("Se distrae a oler cosas");
+	}
+}
+----
+
+=== Method overload
+
+* Permite a una clase implementar un método con diferentes argumentos
+** Dos o más métodos con el mismo nombre pero diferente número de argumentos
+** Dos o más métodos con la misma cantidad de argumentos pero de diferente tipo
+
+[source,java]
+----
+public class Jugador{
+	public void tirarPase(String jugador){
+		return tirarPase("Frente",jugador);
+	}
+	public void tirarPase(String direccion,String jugador){
+		System.out.println("Tira el pase a " + jugador + 
+			"con dirección " + direccion);
+	}
+	
+}
+----
+
+=== Paradigma Orientado a Objetos
+
+==== DEMO
+
+== Java API - Arreglos y Colecciones
+
+=== Arreglos
+
+* Objetos especiales que almacenan un conjunto de objetos de un
+determinado tipo (acorde a las reglas de polimorfismo)
+* Tamaño fijo y se puede acceder a sus miembros mediante índices
+
+[source,java]
+----
+Vehiculo[] vs= new Vehiculo[5] //Inicializa un arreglo de 5 elementos
+vs[0] = new Carro(); //El acceso por índice comienza por 0
+vs[1] = new Motocicleta();
+vs[6] // Arroja error
+vs.length //Devuelve el tamaño del arreglo
+//Se pueden inicializar los arreglos
+vs = new Vehiculo[]{new Motocicleta(),new Carro(),moto2,moto3}; 
+---- 
+
+=== Colecciones
+
+* Framework (Marco de referencia) para el manejo de colecciones (grupos)
+de objetos
+* Arquitectura unificada:
 ** Interfaces
-** Method overload (Sobrecarga de operadores)
-** Method override
-* Colecciones
-** Maps, Lists y Sets
-** Iterator
-** Collection Streams
+** Implementaciones
+** Algoritmos
 
-== Conceptos Básicos
+=== Listas
 
-* IO Streams
-* IO Readers
-* Classpath
-* Dependencias
+* Colección ordenada de elementos
+** ArrayList -> Más utilizada, equivalente a una cola
+** LinkedList -> Lista doblemente ligada
+** Stack -> Funcionamiento de pila
 
-== Conceptos intermedios
+=== Mapas
 
-* Excepciones y StackTraces
-* Reflection
-* Propiedades y variables de ambiente
+* Agrupa colecciones de objetos por medio de llaves
+* No puede contener llaves duplicadas
+** HashMap -> Implementación por default
+** LinkedHashMap -> Permite iterar los valores en el orden de inserción
+** Properties -> Permite leer/escribir archivos de configuración
 
+=== Sets y SortedSets
+
+* Colecciones que no permiten elementos duplicados
+* Los sortedSets a su vez garantizan el ordenamiento de sus elementos
+* Acorde a los métodos equals y hashCode
+** HashSet -> Implementación por default
+** TreeSet -> Implementación por default de un SortedSet
+
+=== Colecciones
+
+==== Demo
+
+== Java API - IO Streams y Writers
+
+=== IO Streams
+
+* Interfaces genéricas para la lectura (InputStream) y escritura (OutputStream)
+de flujos de bytes
+** Lectura de archivos
+** Envío de información via red
+** Transformación de datos
+* La información se procesa de manera secuencial
+
+[source,java]
+----
+InputStream input = new URL("http://micronaut.io/").openStream();
+OutputStream output = new FileOutputStream("/tmp/contenido.txt");
+int c;
+ while ((c = input.read()) != -1) {
+    out.write(c);
+ }
+----
+
+=== IO Readers y Writers
+
+* Enfocadas en flujo de caracteres (Unicode 16-bit)
+
+[source,java]
+----
+FileReader reader = new FileReader("/tmp/contenido.txt");
+FileWriter writer = new FileWriter("/tmp/copia.txt");
+int c;
+ while ((c = reader.read()) != -1) {
+    writer.write(c);
+ }
+----
+
+=== Excepciones
+
+* Son problemas que ocurren durante la ejecución de un programa,interrumpen el flujo normal
+* Pueden ser manejadas acorde al tipo de problema ocurrido
+** Checked Exceptions -> Deben ser manejadas siempre por el 
+programador
+** Unchecked Exceptions -> Pueden no ser manejadas por el programador
+** Errors -> Generalmente no son recuperables, indican un incidente
+mayor en la ejecución del programa
+
+=== Java API
+
+==== Demo
+
+== Conceptos Avanzados
+
+=== Reflection
+
+* Permite la inspección y manipulación en tiempo de ejecución de atributos,
+métodos y clases
+* Utilizado por diversos frameworks para ofrecer opciones de configuración
+y/o ejecución más flexibles
+* Utilizado también por IDE's y otras herramientas para análisis de código
+* Definidos en el paquete **java.lang.reflect.* **
+
+=== Reflection
+
+==== Demo
+
+=== Proxies
+
+* Permite el control de acceso a nivel de objeto al actuar como una entidad 
+de paso
+* Clase virtual que permite funcionar como otra (una especie de polimorfismo
+en tiempo de ejecución)
+** Basadas en implementaciones de interfaces en tiempo de ejecución
+** Públicas, finales y no abstractas
+** Extienden **java.lang.Proxy**
+
+=== Proxies
+
+==== Demo
+
+=== Otros conceptos
+
+* **Java Agent** -> Plugin que trabajar a nivel de la JVM
+** Analizar / Modificar bytecode de las clases cargadas
+* **AOP** -> Aspect Oriented Programming, Separa "componentes"
+de "Aspectos" que afectan de manera "transversal" un programa
+y que no se pueden encapsular de manera eficiente  
 
 == Práctica
 
-* Crear una clase que lea un archivo de texto, separado por comas, mediante expresiones regulares
-extraiga los países con longitud menor a 6 caracteres y los guarde en otro archivo de texto
+* Crear una clase que lea un archivo de texto separado por comas
+** Extraer los países con longitud menor a 6 caracteres 
+** Guardarlos en otro archivo de texto
+** Utilizar la mayor cantidad de técnicas vistas en clase
 

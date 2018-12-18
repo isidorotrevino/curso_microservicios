@@ -1,0 +1,231 @@
+= Curso de Desarrollo de Microservicios
+IES Systems <isidoro.trevino@ies-systems.com>
+2018-12-17
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+ifndef::gradledemodir[:gradledemodir: ../../../proyecto_gradle]
+
+== Día 2
+
+=== Temario
+
+* Preámbulo
+** Ligas de utilidad
+* Gestión de Proyectos Java
+** Introducción a Gradle
+** Plugins
+*** Eclipse
+*** Intellij
+
+=== Temario
+
+* Introducción a microservicios
+** Peticiones HTTP
+*** El ciclo Request / Response
+*** Componentes de un request
+*** Componentes de un response
+
+=== Temario
+
+** Servidores Web
+*** Blocking I/O
+*** Non-Blocking I/O
+** The twelve factor app
+
+
+=== Ligas de utilidad
+
+Actualización de repositorio
+
+[source,text]
+----
+$ git reset --hard origin/master 
+$ git pull origin master
+----
+
+Generación de presentación Asciidoctor
+
+[source,text]
+----
+$ ./gradlew asciidoctor
+----
+
+* Repositorio Maven
+** https://mvnrepository.com/
+
+=== Ligas de utilidad
+
+* Documentación Gradle
+** https://docs.gradle.org/current/userguide/userguide.html
+** https://docs.gradle.org/current/dsl/
+** https://docs.gradle.org/current/javadoc/index.html?overview-summary.html
+* The twelve factor App
+** https://12factor.net/es/
+
+== Gestión de Proyectos Java
+
+* Archivos Make
+** Herramienta de gestión de dependencias orientado a la compilación de proyectos
+** Aplicable a varios lenguajes de programación
+* Ant
+** Herramienta orientada a la realización de tareas mecánicas (scripts)
+
+=== Herramientas de gestión
+
+* Maven
+** Herramienta de gestión y construcción de proyectos
+** Define un modelo estándar para organizar un proyecto (POM / XML), con ciclo de vida más definido con personalización a través de plugins
+* Gradle
+** Mitiga las limitantes de Maven ofreciendo un modelo más flexible de organización
+** Basado en scripts Groovy o Kotlin
+
+== Gradle
+
+* Instalación
+
+[source,text]
+----
+$ sdk install gradle 4.10.3 
+----
+
+* Creación de proyecto básico
+
+[source,text]
+----
+$ mkdir proyecto
+$ cd proyecto
+$ gradle init 
+----
+
+=== Arquitectura básica de un proyecto gradle
+
+[cols="30,70"]
+|===
+| Archivo/Directorio | Uso 
+
+| build.gradle | Configuración del proyecto
+| gradlew o gradlew.bat | "Wrapper", permite acceder al ejecutable gradle 
+| settings.gradle | Configuración para multi-proyectos
+|===
+
+=== Arquitectura básica de un proyecto gradle
+
+[cols="30,70"]
+|===
+| Archivo/Directorio | Uso
+
+| src | Archivos fuente en general
+| src/main/java | Código fuente java
+| src/main/resources | Archivos de configuración, etc
+|===
+
+=== Arquitectura básica de un proyecto gradle
+
+[cols="30,70"]
+|===
+| Archivo/Directorio | Uso
+
+| src/main/webapp | Recursos estáticos web (HTML,CSS,JS)
+| src/test/java | Archivos de pruebas unitarias java
+| build/ | Archivos construidos
+|===
+
+=== build.gradle
+
+[source,groovy]
+----
+include::{gradledemodir}/build.gradle[tags=encabezado]
+----
+
+=== build.gradle
+
+[source,groovy]
+----
+include::{gradledemodir}/build.gradle[tags=repositorios]
+----
+ 
+=== Comandos gradle
+
+* Compilar el proyecto 
+
+[source,text]
+----
+$ ./gradlew build
+----
+
+* Limpiar el proyecto (borrar artefactos compilados)
+
+[source,text]
+----
+$ ./gradlew clean
+----
+
+* Correr el proyecto (Solo con plugin Application)
+
+[source,text]
+----
+$ ./gradlew run
+----
+
+=== Comandos gradle
+
+* Ver tareas disponibles
+
+[source,text]
+----
+$ ./gradlew tasks
+----
+
+* Ver dependencias
+
+[source,text]
+----
+$ ./gradlew dependencies
+----
+
+* Correr pruebas
+
+[source,text]
+----
+$ ./gradlew check
+----
+
+=== Comandos gradle
+
+* Limpiar / Generar configuración para eclipse
+https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/oxygen/3a/eclipse-jee-oxygen-3a-linux-gtk-x86_64.tar.gz
+
+[source,text]
+----
+$ ./gradlew cleanEclipse eclipse
+----
+
+* Limpiar / Generar configuración para Intellij Idea
+https://www.jetbrains.com/idea/download/#section=linux
+
+[source,text]
+----
+$ ./gradlew cleanIdea idea
+----
+
+== Microservicios
+
+* Estilo de arquitectura
+* Descomposición en componentes
+** Privilegio a la autonomía
+** Administrables y coordinables
+
+=== Microservicios
+
+image::monolithic-vs-microservices.png[Diagrama]
+
+=== Diferencias vs. SOA
+
+* Mejor tolerancia a excepciones
+* No depender de un ESB
+* Definición de una API de comunicación sin importar el lenguaje subyacente
+
+== Comunicaciones HTTP
+

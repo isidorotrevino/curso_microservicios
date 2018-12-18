@@ -32,6 +32,7 @@ repositories {
 dependencies {
     gems 'rubygems:slim:3.0.8'
     gems 'rubygems:thread_safe:0.3.5'
+    asciidoctor 'com.github.allati.asciidoctor.monotree:asciidoctor-extension-monotree:0.0.1'
 }
 
 task download {
@@ -59,7 +60,8 @@ asciidoctorj {
 asciidoctor {
     dependsOn jrubyPrepare, download
     sources {
-        include 'curso.adoc'
+        include 'dia1.adoc'
+        include 'dia2.adoc'
     }
     resources {
         from (sourceDir) {

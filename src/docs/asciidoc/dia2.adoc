@@ -412,4 +412,24 @@ separadas
 * XII **Gestión de procesos**
 ** Cualquier script de administración debe funcionar de 
 manera idéntica al resto del proceso
+
+== Micronaut
+
+=== Instalación
+
+[source,text]
+----
+$ sdk install micronaut 1.0.1
+----
+
+=== Nuestro primer proyecto
+
+[source,text]
+----
+$ mn create-app com.ies.curso.dia2.demo2.micronaut-demo
+----
+
+=== Micronaut
+
+==== Demo Hola Mundo
  

@@ -229,3 +229,187 @@ image::monolithic-vs-microservices.png[Diagrama]
 
 == Comunicaciones HTTP
 
+* Protocolo sin estado - Stateless (Solicitud - Respuesta)
+* Protocolo sin conexión - Connectionless
+* Independiente al tipo de medio
+
+=== HTTP
+
+image::HTTP.png[Diagrama]
+
+
+=== Componentes Request
+
+* **URL** Uniform Resource Locator
+** <protocolo>://<host>[:<puerto>]/ruta[?<parametro1>=<valor1>&...]
+* **Método** Tipo de acción a realizar
+
+|===
+| GET | POST | PUT | DELETE
+| PATCH | HEAD | OPTIONS | TRACE
+|===
+
+=== Componentes Request
+
+* **Headers** Pares de valores enviados con la solicitud (Request)
+
+|===
+| **Accept** | Accept-Charset | Accept-Encoding | Authorization
+| Content-Length | **Content-Type** | Cookie | **User-Agent**
+| X-Requested-With | X-Forwarded-For | | 
+|===
+
+=== Componentes Request
+
+* **Body** Contenido opcional enviado junto con el mensaje (Request)
+** Se recomienda enviar junto con los Headers **Content-Type** y **Content-Length**
+
+|===
+| application/json | multipart/form-data  
+| application/xml | application/x-www-form-urlencoded
+|===
+
+=== Componentes Response
+
+* **Headers**
+** Content-Length
+** Content-Type
+
+=== Componentes Response
+
+* **Status Code** Número indicando tipo de respuesta
+** 1XX - Informacional
+** 2XX - Exitoso
+** 3XX - Redirección
+** 4XX - Error del cliente
+** 5XX - Error del servidor
+
+=== Status 2XX
+
+* **200** OK -> Operación exitosa
+* **201** Created -> Recurso creado
+* **202** Accepted -> Solicitud exitosa, pero no completada
+* **204** No Content -> Solicitud exitosa, pero no se regresará
+ningún contenido
+
+=== Status 3XX
+
+* **301** Moved Permanently
+* **302** Found
+
+=== Status 4XX
+
+* **400** Bad Request
+* **401** Unauthorized
+* **403** Forbidden
+* **404** Content not found
+* **405** Method not allowed
+
+=== Status 5XX
+
+* **500** Internal Server Error
+* **502** Bad Gateway
+* **503** Service unavailable
+
+== Servidores Web
+
+* Servlet containers
+** Permiten la ejecución de Java "Servlets", objetos java
+orientados a atender peticiones HTTP
+** Implementación por referencia de facto: Apache Tomcat
+* Netty
+** Framework de transmisión de datos via red
+** Diseñado para mitigar las limitantes de la Java Servlet API
+
+=== Servidores Web
+
+|=== 
+| Tomcat | Netty
+
+| IO | NIO
+| Stream Oriented | Buffer Oriented
+| Blocking IO | Non Blocking IO Selectors
+|===
+
+=== Stream vs. Buffer
+
+* Stream -> Lectura por flujo de bytes
+** Siempre en secuencia
+* Buffer -> Datos previamente almacenados en un buffer
+** Hay cierta flexibilidad en poder reexaminar los datos extraídos
+
+=== Blocking IO
+
+* Cuando un hilo invoca un read() o un write(), el hilo se 
+bloquea hasta que termine la operación
+* Se debe asignar un hilo por cada conexión de un cliente
+* Cada hilo requiere un segmento de memoria
+* Pueden existir hilos sin procesamiento esperando una conexión
+del cliente
+
+=== Non Blocking IO
+
+* Todos los flujos de datos se almacenan temporalmente en buffers
+* Canal (Channel) -> Se dedica a ingresar o sacar información de un buffer
+* Existe un "Selector" en un hilo que examina eventos de I/O en 
+múltiples canales 
+* El Selector atiende a los diferentes clientes para leer o escribir 
+al buffer
+
+=== Resumen
+
+* **Blocking IO** utiliza un hilo por conexión
+** Fácil de utilizar
+** Mal performance y no escala
+* **Non Blocking IO** utiliza un hilo para varias conexiones
+** Excelente performance y ayuda a la escalabilidad
+** Es complejo de implementar
+
+== The twelve factor app
+
+* Metodología para construir aplicaciones **SaaS**
+** Formatos declarativos
+** Contrato claro
+** Integración con plataformas en la nube
+** Minimizar diferencias entre entornos
+** Escalar
+
+=== Twelve factors
+
+* I **Código Base**
+** Una sola fuente de código y con soporte a versiones
+* II **Control de dependencias**
+** Aisladas y definidas de manera explícita
+* III **Configuraciones**
+** Separación estricta entre configuración y código
+
+=== Twelve factors
+
+* IV **Backing Services**
+** Los recursos conectables deben ser transparentes en
+su integración
+* V **Construir, distribuir, ejecutar**
+** Las etapas de construcción, distribución y ejecución deben funcionar 
+separadas
+* VI **Procesos**
+** Se debe poder ejecutar un proceso de manera múltiple y sin estado
+
+=== Twelve factors
+
+* VII **Asignación de puertos**
+** Cada proceso puede escuchar peticiones en un puerto distinto
+* VIII **Concurrencia**
+** Cada proceso debe ejecutarse de manera aislada y ser monitoreable
+* IX **Desechabilidad**
+** Iniciar y terminar cada proceso de manera rápida
+
+=== Twelve factors
+
+* X **Paridad en desarrollo y producción**
+** Cada ambiente debe ser lo más similar posible
+* XI **Bitácoras**
+** Todos los eventos deben enviarse a la salida estándar
+* XII **Gestión de procesos**
+** Cualquier script de administración debe funcionar de 
+manera idéntica al resto del proceso
+ 

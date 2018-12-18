@@ -35,7 +35,11 @@ public class DemoSets {
 		 * 
 		 * Finalmente el método collect transforma el stream en un nuevo set
 		 */
-		List<String> nuevaColeccion = set.stream().map(String::toUpperCase).sorted().collect(Collectors.toList());
+		List<String> nuevaColeccion = 
+			set.stream()
+				.map(String::toUpperCase)
+				.sorted()
+				.collect(Collectors.toList());
 		System.out.println("Nueva coleccion a partir de procesamiento de un stream");
 		for(String s : nuevaColeccion) {
 			System.out.println("=> "+s);

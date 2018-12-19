@@ -1,0 +1,16 @@
+micronaut:
+    application:
+        name: micronaut-calendarizacion
+endpoints:
+    beans:
+        enabled: true
+        sensitive: false
+    info:
+        enabled: true
+        sensitive: false
+    health:
+        enabled: true
+        sensitive: false
+    routes:
+        enabled: true
+        sensitive: false

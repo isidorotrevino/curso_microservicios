@@ -16,9 +16,15 @@ ifndef::gradledemodir[:gradledemodir: ../../../proyecto_gradle]
 * Manejo de operaciones http
 ** Métodos y Headers
 ** Validación de datos
+
+=== Temario
+
 * Acceso a base de datos
 ** GORM
 ** RxPG
+
+=== Temario
+
 * Tareas calendarizadas
 * Monitoreo
 * Seguridad
@@ -215,3 +221,104 @@ sourceLanguage: groovy
 === Primeros pasos Micronaut + GORM
 
 ==== DEMO
+
+== Práctica
+
+* Crear una aplicación micronaut
+
+[source,text]
+----
+$ mn create-app com.ies.curso.practica2 --features=hibernate-gorm
+----
+
+* Crear un modelo de dominio cliente con al menos 4 atributos
+* Crear un controlador que permita las 4 operaciones básicas (CRUD)
+* Crear un proyecto postman para probarlo
+
+== Reactive Postgres
+
+* Interfase de conexión hacia Postgres
+** No JDBC (Blocking IO)
+** Paradigma de programación asíncrono
+** Capacidad de manejar múltiples conexiones en un solo hilo
+
+=== Particularidades
+
+* No se pueden utilizar las interfaces de JDBC
+* Al momento solo existe soporte para PostgreSQL
+
+[source,test]
+----
+$ mn create-app com.ies.curso.dia3.demo2 \
+ --features=postgres-reactive
+----
+
+=== Reactive Postgres
+
+==== Demo
+
+[source,test]
+----
+$ curl localhost:8080/reactive
+----
+
+== Tareas calendarizadas
+
+* Permite la ejecución de tareas por intervalo de tiempo
+** Definido en intervalos cronometrados
+** O por medio de horarios específicos (Notación CRON)
+*** <segundos> <minutos> <horas> <dia del mes> <mes> <dia de la semana> 
+
+[source,java]
+----
+
+@Scheduled(fixedDelay = "10s", initialDelay = "5s") 
+void ejecutarValidacion(){ /*...*/}
+
+@Scheduled(cron = "0 30 4 1 * ?") 
+void ejecutarRespaldo(){ /*...*/}
+----
+
+== Monitoreo
+
+* Servicios de monitoreo disponibles por Micronaut
+** **info** -> Información del estado de la aplicación
+** **health** -> Salud de la aplicación
+** **routes** -> Rutas disponibles
+** **beans** -> Servicios,Controllers, etc, cargados
+
+=== Activación
+
+* Con agregar una dependencia al proyecto, Micronaut 
+automáticamente configura los endpoints de monitoreo
+
+[source,groovy]
+----
+compile "io.micronaut:micronaut-management"
+----
+
+=== Tareas calendarizadas y Monitoreo
+
+==== DEMO
+
+== Seguridad
+
+* Modelo declarativo basado en Annotations
+** Autenticación
+** Autorización
+* Soporte de JWT / OAuth 
+
+=== JWT
+
+image::jwt-bearer-token.svg[Diagrama]
+
+=== Seguridad
+
+==== DEMO
+
+== Práctica
+
+* Crear una aplicación micronaut
+** CRUD de Clientes protegido por JWT
+** Cada 60 minutos revisar si un cliente fue modificado e 
+imprimirlo en logs

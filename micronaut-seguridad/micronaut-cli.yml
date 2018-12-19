@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: com.ies.curso.dia3
+---
+testFramework: spock
+sourceLanguage: java

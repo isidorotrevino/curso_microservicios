@@ -16,4 +16,14 @@ dataSource:
   jmxExport: true
   driverClassName: org.h2.Driver
   username: sa
-  password: ''
+  password: ''       
+---
+postgres:
+    reactive:
+        client:
+          port: 5432
+          host: 35.239.157.161
+          database: siniestros
+          user: postgres
+          password: 1qwerty7
+          maxSize: 5

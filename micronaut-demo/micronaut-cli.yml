@@ -1,5 +1,7 @@
 profile: service
 defaultPackage: com.ies.curso.dia2.demo2
 ---
-testFramework: junit
-sourceLanguage: java
+#testFramework: junit
+#sourceLanguage: java
+testFramework: spock
+sourceLanguage: groovy

@@ -1,0 +1,217 @@
+= Curso de Desarrollo de Microservicios
+IES Systems <isidoro.trevino@ies-systems.com>
+2018-12-18
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+ifndef::gradledemodir[:gradledemodir: ../../../proyecto_gradle]
+
+== Día 3
+
+=== Temario
+
+* Preámbulo
+** Ligas de utilidad
+* Manejo de operaciones http
+** Métodos y Headers
+** Validación de datos
+* Acceso a base de datos
+** GORM
+** RxPG
+* Tareas calendarizadas
+* Monitoreo
+* Seguridad
+
+=== Ligas de utilidad
+
+* Micronaut
+** Guía: https://docs.micronaut.io/latest/guide/index.html
+** API: https://docs.micronaut.io/latest/api/
+* GORM
+** http://gorm.grails.org/latest/hibernate/manual/index.html
+** http://gorm.grails.org/latest/hibernate/api/index.html
+
+=== Ligas de utilidad
+
+* Herramientas para manejor de mensajes REST
+** POSTMAN (Chrome): https://www.getpostman.com/
+** REST Client (FF): https://addons.mozilla.org/es/firefox/addon/restclient/
+
+== Micronaut 
+
+=== Parámetros, Métodos y Headers
+
+* Rutas
+** Se pueden utilizar variables en las rutas
+
+[source,java]
+----
+@Get("/{id}")
+Cuenta obtenerCuenta(Long id){
+  return cuentaService.obtenerCuenta(id);
+}
+----
+
+** O se pueden mapear todas las variables de un query a un objeto
+
+[source,java]
+----
+@Get("/credito/buscar{?parametrosCredito}")
+Credito buscarCredito(ParametrosCredito parametrosCredito){
+  return creditoService.buscarCredito(parametrosCredito);
+}
+----
+
+=== Parámetros, Métodos y Headers
+
+* **@Body**
+** Transforma el cuerpo en la variable determinada
+
+[source,java]
+----
+@Post("/credito/crear")
+Credito crearCredito(@Body CrearCreditoCommand cmd){
+  return creditoService.crearCredito(cmd);
+}
+----
+
+** También se pueden asignar Cookies 
+
+[source,java]
+----
+
+@Get("/compra")
+String carrito(@CookieValue String cookie){
+  return cookie;
+}
+----
+
+=== Parámetros, Métodos y Headers
+
+* Los headers también se pueden asignar a parámetros
+
+[source,java]
+----
+
+@Get("/noticia/{id}")
+String obtenerNoticia(@Header String contentType,
+	@Header("Accept") String formato, 
+	Long id){
+  // ...
+}
+----
+
+* Se pueden  realizar transformaciones de los datos
+
+[source,java]
+----
+@Get("/noticia/{fecha}")
+String obtenerNoticia(@Format("dd/MM/YY") LocalDate fecha){
+  // ...
+}
+----
+
+=== Parámetros, Métodos y Headers
+
+==== Demo
+
+== Validación
+
+* Se agrega en **build.gradle** la dependencia
+
+[source,groovy]
+----
+compile "io.micronaut.configuration:micronaut-hibernate-validator"
+---- 
+
+* Basado en el JSR 380 - Annotations para validación de datos
+
+=== Validación
+
+[source,java]
+----
+@Validated 
+@Controller("/email")
+public class EmailController {
+
+    @Post("/send")
+    public HttpResponse send(@Body @Valid Email email) { 
+        return HttpResponse.ok(Collections
+        	.singletonMap("msg", "OK"));    }
+}
+----
+
+=== Manejo de errores
+
+* Podemos interceptar todas las excepciones lanzadas a nivel global en el
+código
+
+[source,java]
+----
+@Error(global = true) 
+public HttpResponse<JsonError> error(HttpRequest request, 
+	Throwable e) {
+    JsonError error = new JsonError("Ocurrió un error: " 
+    	+ e.getMessage()) 
+            .link(Link.SELF, Link.of(request.getUri()));
+    return HttpResponse.<JsonError>serverError()
+            .body(error); 
+}
+----
+
+=== Validación y Manejo de errores
+
+==== Demo
+
+== Acceso a Base de Datos
+
+=== GORM
+
+* Toolkit de acceso a datos, basado en Groovy
+* Originalmente usado por el framework Grails y posteriormente adaptado a uso
+general
+* Integración a bases de datos relacionales, MongoDB, Neo4j y Cassandra
+
+=== Primeros pasos Micronaut + GORM
+
+[source,groovy]
+.build.gradle
+----
+apply plugin: 'groovy'
+
+dependencies{
+	compile "io.micronaut:micronaut-runtime-groovy"
+    compile "io.micronaut:micronaut-validation"
+    compileOnly "io.micronaut:micronaut-inject-groovy"
+    
+    testCompile "io.micronaut:micronaut-inject-groovy"
+    testCompile("org.spockframework:spock-core") {
+        exclude group: "org.codehaus.groovy", module: "groovy-all"
+    }
+}
+----
+
+=== Primeros pasos Micronaut + GORM
+
+[source,groovy]
+.build.gradle
+----
+tasks.withType(GroovyCompile) {
+    groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+}
+----
+
+[source,groovy]
+.micronaut-cli.yml
+----
+profile: service
+defaultPackage: com.ies.curso.dia2.demo2
+---
+testFramework: spock
+sourceLanguage: groovy
+----
+
+=== Primeros pasos Micronaut + GORM
+
+==== DEMO

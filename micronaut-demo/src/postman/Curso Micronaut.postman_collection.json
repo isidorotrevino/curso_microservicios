@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "19f04e8a-d689-48db-aaea-4823020000f5",
+		"name": "Curso Micronaut",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Listar productos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/producto",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"producto"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear productos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"nombre\":\"Palomitas\",\n\t\"marca\":\"Act One\",\n\t\"sku\":\"ABC123\",\n\t\"descontinuado\":false\n}"
+				},
+				"url": {
+					"raw": "localhost:8080/producto?",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"producto"
+					],
+					"query": [
+						{
+							"key": "nombre",
+							"value": "Palomitas",
+							"disabled": true
+						},
+						{
+							"key": "marca",
+							"value": "Act One",
+							"disabled": true
+						},
+						{
+							"key": "sku",
+							"value": "DFADSF2342342",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Productos Por Marca",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/producto/buscar/Act One",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"producto",
+						"buscar",
+						"Act One"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8080/producto/Act One",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/producto/Act One",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"producto",
+						"Act One"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

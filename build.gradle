@@ -63,6 +63,7 @@ asciidoctor {
         include 'dia1.adoc'
         include 'dia2.adoc'
         include 'dia3.adoc'
+        include 'dia4.adoc'
     }
     resources {
         from (sourceDir) {

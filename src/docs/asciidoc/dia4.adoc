@@ -1,0 +1,242 @@
+= Curso de Desarrollo de Microservicios
+IES Systems <isidoro.trevino@ies-systems.com>
+2018-12-19
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+ifndef::gradledemodir[:gradledemodir: ../../../proyecto_gradle]
+
+== Día 4
+
+=== Temario
+
+* Preámbulo
+** Ligas de utilidad
+
+=== Temario
+
+* Contenedores
+** Docker
+** Comandos esenciales
+
+=== Temario
+
+* Service Discovery
+** Consul
+
+=== Temario
+
+* Rastreo Centralizado
+** Zipkin
+
+=== Ligas de utilidad
+
+* Docker
+** https://docs.docker.com/
+** https://hub.docker.com/
+** https://docs.docker.com/compose/
+* Consul
+** https://www.consul.io/docs/index.html
+* Zipkin
+** https://zipkin.io/
+
+== Contenedores
+
+=== Contenedores
+
+* También llamado Operating-system-level virtualization
+* El kernel permite administrar la existencia de diversas instancias de user-space
+** Código ejecutado fuera del kernel de SO
+** Protección de memoria
+** Separación de privilegios
+* Diversas implementaciones
+** chroot
+** Jails
+** Zones
+
+=== Docker
+
+* Suite de herramientas que aprovechan servicios del kernel para crear y 
+administrar contenedores
+* **Contenedor** -> Abstracción que mediante diferentes herramientas permite 
+aislar un proceso
+** **Namespaces** -> Delimitan a los contenedores con una vista del sistema 
+subyacente (Stack de red, usuario, etc)
+** **CGroups** -> Característica del kernel que aisla, prioriza y administra el
+uso de recursos (CPU, I/O, Memoria, etc)
+
+=== Docker
+
+* **Union File System** -> Sistema de archivos apilable donde archivos y directorios
+de diversos sistemas de archivos (conocidos como ramas) se pueden sobreponer de
+manera transparente para formar un sistema de archivos unificado
+
+* Los contenedores comparten el kernel del host con otros contenedores
+
+=== Docker
+
+image::docker1.png[Docker]
+
+=== Comandos esenciales
+
+* **docker run** -> Ejecutar un contenedor a partir de una imagen
+** **--rm** -> Elimina el contenedor al detenerlo
+** **--name <nombre>** -> Asigna un nombre al contenedor
+** **-v <folder_local>:<folder_contenedor>** -> Asigna un "volumen", folder 
+compartido con el contenedor
+** **-e <variable>=<valor>** -> Asigna una variable de ambiente
+** **-p <puerto_local>:<puerto_contenedor>** -> Expone un puerto del contenedor hacia el host
+
+=== Comandos esenciales
+
+* **docker images** -> Muestra el listado de imágenes descargadas en el sistema
+* **docker rmi <imagen>** -> Elimina una imagen del sistema
+* **docker stop <contenedor>** -> Detiene un contenedor
+* **docker rm <contenedor>** -> Elimina un contenedor detenido
+
+=== Comandos esenciales
+
+* **docker logs <contenedor>** -> Muestra la bitácora (stdout) del contenedor
+** **-f** -> equivalente a tail -f, actualiza la bitácora conforme se mandan mensajes
+** **--tail=<lineas>** --> Muestra las últimas líneas de la bitácora
+
+=== Docker
+
+==== DEMO
+
+== Cliente HTTP
+
+* Brinda la posibilidad de invocar a otros microservicios
+* Permite la creación de clientes dinámicos a partir de una interface
+
+[source,java]
+----
+public interface ProductoOperations{
+	Flowable<Producto> consultarProductos();
+}
+----
+
+=== Cliente HTTP
+
+* Se crea otra interface a la que se asigna un annotation para crear un 
+cliente dinámico
+
+[source,java]
+----
+@Client("http://localhost:8081") 
+public interface ProductoClient extends ProductoOperations {
+
+    @Get("/producto")
+    Flowable<Producto> findAll();
+}
+----
+
+=== Cliente HTTP
+
+==== DEMO
+
+== Service Discovery
+
+* Habilidad de los microservicios de encontrarse sin conocer la ubicación 
+física o la dirección IP de los mismos
+** De manera manual mediante DNS
+** Mediante servidores de descubrimiento como Consul, Zookeeper o Eureka
+** Delegando la labor al contenedor, por medio de Kubernetes o Swarm
+
+=== Consul
+
+* Servidor de descubrimiento de servicios
+** Revisión de salud
+** Almacenamiento de llaves clave-valor
+** Soporte multi-datacenter
+
+=== Integración Micronaut / Consul
+
+[source,groovy]
+.build.gradle
+----
+compile "io.micronaut:micronaut-discovery-client"
+----
+
+[source,yaml]
+.application.yml
+----
+consul:
+  client:
+    registration:
+      enabled: true
+    defaultZone: "${CONSUL_HOST:localhost}:${CONSUL_PORT:8500}"
+----
+
+=== Integración Micronaut / Consul
+
+* Se actualizan los "Clientes HTTP", cambiando las ip's por nombres de servicio
+
+[source,java]
+----
+@Client("http://localhost:8081") 
+public interface ProductoClient extends ProductoOperations
+---- 
+
+* Por:
+
+[source,java]
+----
+@Client("servicioProductos") 
+public interface ProductoClient extends ProductoOperations
+---- 
+
+=== Integración Micronaut / Consul
+
+==== DEMO
+
+[source,text]
+----
+$ docker run -p 8500:8500 consul
+----
+
+== Rastreo Centralizado
+
+* Presenta retos especiales en las arquitecturas distribuidas
+* Existen sistemas de rastreo distribuido que mitigan la problemática
+** Zipkin
+** Jaeger
+* Estándar **OpenTracing**
+
+=== Conceptos
+
+* **Span** -> Bloque primario de un rastreo distribuido
+** Unidad de trabajo individual en un sistema distribuido
+* **Tag** -> Anotaciones llave valor que se agregan a un span
+
+=== Integración con Micronaut
+
+[source,groovy]
+.build.gradle
+----
+runtime 'io.zipkin.brave:brave-instrumentation-http'
+runtime 'io.zipkin.reporter2:zipkin-reporter'
+compile 'io.opentracing.brave:brave-opentracing'
+----
+
+=== Integración con Micronaut
+
+[source,java]
+.application.yml
+----
+tracing:
+    zipkin:
+        http:
+            url: http://localhost:9411
+        enabled: true
+----
+
+=== Rastreo Centralizado
+
+==== DEMO
+
+[source,text]
+----
+$ docker run -d -p 9411:9411 openzipkin/zipkin
+----

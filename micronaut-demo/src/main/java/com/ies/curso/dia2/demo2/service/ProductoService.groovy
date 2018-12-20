@@ -12,7 +12,8 @@ interface  ProductoService {
 
 	int count()
 	
-	Producto save(@NotBlank String nombre,@NotBlank  String sku, String marca,Boolean descontinuado)
+	Producto save(@NotBlank String nombre,@NotBlank  String sku,
+				  String marca,Boolean descontinuado)
 	
 	List<Producto> findAll()
 	

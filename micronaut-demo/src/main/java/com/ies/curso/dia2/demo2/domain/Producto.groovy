@@ -8,7 +8,7 @@ class Producto {
 	String nombre
 	String sku
 	String marca
-	Boolean descontinuado=false
+	Boolean descontinuado=false;
 	
 	static constraints = {
 		marca (nullable:true)

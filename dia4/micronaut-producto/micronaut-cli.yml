@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: com.ies.curso.dia4.producto
+---
+testFramework: junit
+sourceLanguage: java

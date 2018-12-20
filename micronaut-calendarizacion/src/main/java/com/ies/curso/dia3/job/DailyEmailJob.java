@@ -11,6 +11,7 @@ public class DailyEmailJob {
     protected final EmailUseCase emailUseCase;
 
     public DailyEmailJob(EmailUseCase emailUseCase) {  // <2>
+
         this.emailUseCase = emailUseCase;
     }
 

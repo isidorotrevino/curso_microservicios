@@ -81,10 +81,14 @@ image::docker1.png[Docker]
 === Comandos esenciales
 
 * **docker run** -> Ejecutar un contenedor a partir de una imagen
-** **--rm** -> Elimina el contenedor al detenerlo
+** **--link <contenedor2>:<nombre_interno>** -> Liga un contenedor con otro
+creando una red privada entre ellos
 ** **--name <nombre>** -> Asigna un nombre al contenedor
 ** **-v <folder_local>:<folder_contenedor>** -> Asigna un "volumen", folder 
 compartido con el contenedor
+
+=== Comandos esenciales
+
 ** **-e <variable>=<valor>** -> Asigna una variable de ambiente
 ** **-p <puerto_local>:<puerto_contenedor>** -> Expone un puerto del contenedor hacia el host
 
@@ -94,6 +98,8 @@ compartido con el contenedor
 * **docker rmi <imagen>** -> Elimina una imagen del sistema
 * **docker stop <contenedor>** -> Detiene un contenedor
 * **docker rm <contenedor>** -> Elimina un contenedor detenido
+* **docker ps** -> Muestra los contenedores en ejecución
+** **-a** -> Muestra también los contenedores detenidos
 
 === Comandos esenciales
 
@@ -104,6 +110,14 @@ compartido con el contenedor
 === Docker
 
 ==== DEMO
+
+[source,text]
+----
+$ docker run --rm --name mysqldemo \
+ -e MYSQL_ROOT_PASSWORD=prueba mysql:5.6
+$ docker run --rm --name joomlademo \
+ -p 9090:80  --link mysqldemo:mysql joomla
+----
 
 == Cliente HTTP
 
@@ -183,7 +197,7 @@ public interface ProductoClient extends ProductoOperations
 
 [source,java]
 ----
-@Client("servicioProductos") 
+@Client("producto") 
 public interface ProductoClient extends ProductoOperations
 ---- 
 

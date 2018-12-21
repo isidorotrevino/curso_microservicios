@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ies.curso.dia5.PruebaReactive">
+
+    <resultMap id="registroMap" type="com.ies.curso.dia5.dto.Registro">
+        <id column="llave" property="id" />
+        <result column="valor" property="identificador" />
+    </resultMap>
+
+    <select id="obtenerRegistros" resultType="java.util.HashMap">
+        SELECT id, identificador
+        FROM prueba_reactive
+        LIMIT 1000
+    </select>
+
+    <select id="obtenerRegistrosFiltrado" resultType="com.ies.curso.dia5.dto.Registro">
+        SELECT id, identificador
+        FROM prueba_reactive
+        <where >
+            <if test="idInicial != null" >
+                id &gt;= #{idInicial}
+            </if>
+            <if test="idInicial != null and idFinal != null" >
+                AND
+            </if>
+            <if test="idFinal != null" >
+                id &lt;= #{idFinal}
+            </if>
+        </where>
+        LIMIT 1000
+    </select>
+
+    <select id="obtenerRegistrosFiltradoAvanzado" resultMap="registroMap">
+        SELECT id AS llave,
+        identificador AS valor
+        FROM prueba_reactive
+        <where >
+            <if test="idInicial != null" >
+                id &gt;= #{idInicial}
+            </if>
+            <if test="idInicial != null and idFinal != null" >
+                AND
+            </if>
+            <if test="idFinal != null" >
+                id &lt;= #{idFinal}
+            </if>
+            <if test="identificador!=null">
+                AND identificador LIKE '${identificador}%'
+            </if>
+        </where>
+        LIMIT 1000
+    </select>
+
+
+
+</mapper>

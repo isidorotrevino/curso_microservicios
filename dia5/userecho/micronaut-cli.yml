@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: com.ies.curso.dia5.userecho
+---
+testFramework: junit
+sourceLanguage: java

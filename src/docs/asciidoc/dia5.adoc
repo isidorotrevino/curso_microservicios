@@ -1,0 +1,258 @@
+= Curso de Desarrollo de Microservicios
+IES Systems <isidoro.trevino@ies-systems.com>
+2018-12-20
+:revnumber: {project-version}
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../java]
+ifndef::gradledemodir[:gradledemodir: ../../../proyecto_gradle]
+
+== Día 5
+
+=== Temario
+
+* Ligas de utilidad
+* Persistencia con MyBatis
+* WebSockets y SSE
+* Seguridad entre contenedores
+
+
+== Ligas de utilidad
+
+* MyBatis
+** http://www.mybatis.org/mybatis-3/sqlmap-xml.html
+** http://www.mybatis.org/mybatis-3/apidocs/index.html
+* Micronaut y seguridad
+** https://docs.micronaut.io/latest/guide/index.html#security
+
+
+== MyBatis
+
+* Framework de persistencia orientado a facilitar la ejecución de 
+consultas
+* Patrón de diseño SQL - Mapper
+** Permite la ejecución de sentencias SQL complejas
+** Disminuye los riesgos de SQL Injection (entre otros)
+
+=== Uso
+
+* Agregar dependencia
+
+[source,groovy] 
+----
+compile group: 'org.mybatis', name: 'mybatis', version: '3.4.6'
+compile "io.micronaut.configuration:micronaut-jdbc-hikari"
+compile group: 'org.postgresql', name: 'postgresql', version: '42.2.5'
+----
+
+=== Configuración
+
+* Configuración General
+
+[source,java]
+----
+TransactionFactory transactionFactory = new JdbcTransactionFactory();
+Environment environment =
+        new Environment("production", transactionFactory, dataSource);
+Configuration configuration = new Configuration(environment);
+----
+
+=== Configuración
+
+[source,java]
+----
+InputStream inputStream = Resources.getResourceAsStream(mapperResource);
+XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, mapperResource, configuration.getSqlFragments());
+mapperParser.parse();
+----
+
+=== Mappers
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ies.curso.dia5.PruebaReactive">
+     .....
+</mapper> 
+----
+
+=== MyBatis
+
+==== DEMO
+
+== Información estática
+
+[source,yml]
+.application.yml
+----
+    router:
+        static-resources:
+            default:
+                enabled: true
+                mapping: /**
+                paths: classpath:public
+----
+
+== Websockets y SSE
+
+* Configuración mediante annotations
+
+[source,java]
+----
+@ServerWebSocket("/chat/{topic}/{username}") 
+public class ChatServerWebSocket{
+	private WebSocketBroadcaster broadcaster;
+	
+	@OnOpen 
+    public void onOpen(String topic, String username, WebSocketSession session) 
+    ....
+    @OnMessage 
+    public void onMessage(String topic,String username,String message,
+            WebSocketSession session)
+    ....
+    @OnClose 
+    public void onClose(String topic,String username,
+            WebSocketSession session) 
+}
+----
+
+=== WebSockets
+
+* Argumentos
+** Diversos String correspondientes a variables de URI
+** Instancia de WebSocketSession
+* OnClose
+** Opcionalmente un CloseReason
+* OnMessage
+** Parámetro que define el cuerpo
+*** WebsocketFrame
+*** Un primitivo o un String
+
+
+=== WebSockets
+
+* OnMessage (Cont.)
+*** byte[] ByteBuffer
+*** POJO (Bean)
+* OnError
+** Exception
+
+=== Cliente
+
+[source,java]
+----
+@Inject
+@Client("http://localhost:8080")
+RxWebSocketClient webSocketClient;
+----
+
+=== Cliente Web (JS)
+
+[source,javascript]
+----
+var webSocket = new WebSocket("ws://" + location.hostname + ":" 
+	+ location.port + "/ws/chat/" + hash[1] + "/" + hash[2]);
+webSocket.onmessage = function (msg) { updateChat(msg); };
+webSocket.onclose = function () { 
+	alert("WebSocket connection closed") };
+webSocket.send(message);
+----
+
+=== WebSockets
+
+==== DEMO
+
+[source,text]
+----
+http://localhost:8080/#/proyecto/juan
+http://localhost:8080/#/proyecto/pedro
+----
+
+== ServerSentEvents
+
+* Implementación de ServerSentEvents (SSE)
+* Hay que implementar Reactive Streams Publisher que emita
+objetos de tipo Event
+* El Publisher puede ser una tarea en background (calendarizada, por ejemplo)
+
+=== ServerSentEvents
+
+==== DEMO
+
+[source,text]
+----
+$ curl http://localhost:8080/noticias
+----
+
+== Propagación de Token
+
+* Técnica que nos permitirá mantener la seguridad en los microservicios, con
+un punto único de autenticación
+* El token JWT podrá viajar entre las diferentes invocaciones de microservicios
+* El Gateway o punto de acceso configura su seguridad de la manera acostumbrada
+
+=== Gateway
+
+* Se agrega la opción de enviar el JWT en el header
+
+[source,yml]
+.application.yml
+----
+writer:
+  header:
+    enabled: true
+----
+
+=== Gateway
+
+* Se pueden delimitar los clientes seguros mediante
+expresiones regulares
+
+[source,yml]
+.application.yml
+----
+propagation:
+  enabled: true
+  service-id-regex: "userecho"
+----
+
+=== Cliente
+
+* Protege sus métodos con @Secured
+
+[source,java]
+----
+ @Secured("isAuthenticated()")
+----
+
+* Debe configurar el mismo "secreto" de firma de JWT que el Gateway
+
+[source,yml]
+.application.yml
+----
+secret: 
+   validation:
+      secret: secretoBienResguardadoYComunParaTodos 
+----
+
+=== Propagación de Token
+
+==== DEMO
+
+[source,text]
+----
+$ curl -X "POST" "http://localhost:8080/login" \
+     -H 'Content-Type: application/json; charset=utf-8' \
+     -d $'{ "username": "juan","password": "perez" }'
+
+$ curl "http://localhost:8080/user" -H 'Authorization: 
+	Bearer <access_token>'
+----
+
+== PRÁCTICA FINAL
+
+==== Se enviará detalle por correo
+

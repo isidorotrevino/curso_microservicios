@@ -1,0 +1,11 @@
+micronaut:
+    application:
+        name: mybatis
+datasources:
+  default:
+    url: jdbc:postgresql://35.239.157.161:5432/siniestros
+    pooled: true
+    jmxExport: true
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: 1qwerty7
